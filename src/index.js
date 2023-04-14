@@ -5,12 +5,18 @@ import './bootstrap-override.scss';
 import reportWebVitals from './reportWebVitals';
 import './i18n';
 import App from './container/App';
+import { Provider } from 'react-redux';
+import configureStore from './redux/configureStore';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const store = configureStore();
+
 root.render(
-  <React.StrictMode>
-   <App/>
-  </React.StrictMode>
+   <Provider store={store}>
+      <App />
+   </Provider>
+
 );
 
 //Api progress ve login pages arasında parent child ilişkisi vardır. Api progress içerisinde child componenti render edebilir ona parametre verebiliriz

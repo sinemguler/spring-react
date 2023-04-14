@@ -1,36 +1,64 @@
-import React, { Component } from 'react';
+import React from 'react';
 import logo from '../assets/joke.png';
 import { Link } from 'react-router-dom';
-import { withTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
+import { useDispatch, useSelector } from 'react-redux';
+import { logoutSuccess } from '../redux/authActions';
 
+const TopBar = (props) => {
 
-class TopBar extends Component {
-    render() {
-        const { t } = this.props;
-        return (
-            <div className='shadow-sm bg-light mb-2'>
-                <nav className="navbar navbar-light container navbar-expand">
-                    <Link className="navbar-brand" to="/">
-                        <img src={logo} width="60" alt="Joke Logo" />
-                        Joke
+    const { t } = useTranslation();
+
+    const { username, isLoggedIn } = useSelector((store) => ({
+        isLoggedIn: store.isLoggedIn,
+        username: store.username
+    }));
+
+    const dispatch = useDispatch();
+
+    const onLogoutSuccess = () => {
+        dispatch(logoutSuccess());
+    }
+
+    let links = (
+        <ul className='navbar-nav ms-auto'>
+            <li>
+                <Link className='nav-link' to="/login">
+                    {t('Login')}
+                </Link>
+            </li>
+            <li>
+                <Link className='nav-link' to="/signup">
+                    {t('Sign Up')}
+                </Link>
+            </li>
+        </ul>
+    );
+    if (isLoggedIn) {
+        links = (
+            <ul className='navbar-nav ms-auto'>
+                <li>
+                    <Link className='nav-link' to={`/user/${username}`}>
+                        {username}
                     </Link>
-                    
-                    <ul className='navbar-nav ms-auto'>
-                        <li>
-                            <Link className='nav-link' to="/login">
-                                {t('Login')}
-                            </Link>
-                        </li>
-                        <li>
-                            <Link className='nav-link' to="/signup">
-                                {t('Sign Up')}
-                            </Link>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+                </li>
+                <li className='nav-link' onClick={onLogoutSuccess} style={{ cursor: 'pointer' }}>
+                    {t('Logout')}
+                </li>
+            </ul>
         );
     }
+    return (
+        <div className='shadow-sm bg-light mb-2'>
+            <nav className="navbar navbar-light container navbar-expand">
+                <Link className="navbar-brand" to="/">
+                    <img src={logo} width="60" alt="Joke Logo" />
+                    Joke
+                </Link>
+                {links}
+            </nav>
+        </div>
+    );
 }
 
-export default withTranslation()(TopBar);
+export default TopBar;
