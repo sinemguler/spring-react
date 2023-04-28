@@ -1,9 +1,10 @@
 import React from 'react';
+import UserList from '../components/UserList';
 
 const HomePages = () => {
     return (
         <div className='container'>
-            HomePage
+            <UserList/>
         </div>
     );
 };
